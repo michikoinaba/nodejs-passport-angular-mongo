@@ -1,0 +1,23 @@
+{
+  "name": "nodejs_mongo_project",
+  "version": "0.0.1",
+  "description": "test project using nodejs, passport, angular and mongo",
+  "main": "server.js",
+   "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "Michiko Inaba",
+  "license": "BSD",
+   "dependencies": {
+   "passport" : "~0.1.17",    
+    "express": "~4.14.0",
+    "method-override": "~2.3.7",
+    "body-parser": "~1.16.0",
+    "mongodb": "~2.2.22",
+    "morgan": "~1.0.0",
+   "express-session": "~1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "~1.11.0"
+  }
+}
