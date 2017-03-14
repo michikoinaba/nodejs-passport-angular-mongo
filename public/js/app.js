@@ -4,7 +4,7 @@
  * Angular Application
  ******************************************************************************/
 var app = angular.module('app',
-		[ 'ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap' ]).config(
+		[ 'ToolService','ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap' ]).config(
 		function($routeProvider, $locationProvider, $httpProvider) {
 
 			// ================================================
@@ -80,6 +80,13 @@ var app = angular.module('app',
 				templateUrl : 'views/signup.html',
 				controller : 'SignupCtrl'
 			})
+			 .when('/rent', {
+	        templateUrl: 'views/rent.html',
+	        controller: 'RentCtrl',
+	        resolve: {////check the user's login status
+	            loggedin: checkLoggedin
+	          }
+	      })
 		}) // end of config()
 		.run(function($rootScope, $http) {
 			$rootScope.message = '';

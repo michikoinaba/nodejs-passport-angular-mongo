@@ -13,27 +13,20 @@ app.controller('loginCtrl', function($scope, $rootScope, $http, $location) {
 	      password: $scope.user.password,
 	    })
 	    .success(function(user){
-	    	console.log(user.message);
-	    	if(user.message !=undefined){
-	    		$scope.errormsg =user.message;
-	    		
-	    	}
-	    	else{
 	    	
-	    		//console.log(JSON.stringify(user));
-	    		 $rootScope.username=user.username;
-	    		 $location.url('/home');
-	    	}
-	     
-	
-	     
+	    	//console.log(JSON.stringify(user));
+	    	$rootScope.username=user.username;
+	    	$location.url('/home');
+	    
 	    })
-	    .error(function(data, status, headers, config){
+	    .error(function(err){
 	      // Error: authentication failed
-	    	$scope.errormsg = 'Authentication failed.';
-	    	console.log('loginCtrl error');
+	    	
+	    	//$scope.errormsg = 'Authentication failed.';
+	    	$scope.errormsg=err;
+	    	//console.log('loginCtrl error');
 	    	//console.log(JSON.stringify(data));
-	    	console.log(data);
+	    	//console.log(data);
 	      
 	    });
 	  };
