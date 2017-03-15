@@ -7,7 +7,24 @@ var userSchema = mongoose.Schema({
 
 	username: {type: String },
 	password: {type: String},
-
+	info:{ 
+		 
+		first_name:{type: String},
+		last_name:{type: String},
+		email:{type: String},
+		phone:{type: String},
+	
+		address:[{ 
+		          street1: {type: String},
+		          street2: {type: String},
+		          city: {type: String},
+		          state: {type: String},
+		          zip: {type: String}
+		         
+		} ]
+	
+	
+	}
 });
 
 
@@ -24,3 +41,4 @@ userSchema.methods.validPassword = function(password) {
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('User', userSchema);
+

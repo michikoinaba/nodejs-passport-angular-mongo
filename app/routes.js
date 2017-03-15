@@ -1,6 +1,6 @@
 // app/routes.js
 var tools = require('./models/tools');
-
+var users = require('./models/user');
 module.exports = function(app, passport) {
 
 	// =====================================
@@ -98,6 +98,59 @@ module.exports = function(app, passport) {
 		    });
 		
 	});
+	
+	//Customer Info Page/////
+  //postman test json
+	/*
+	{ "username": "yoda",
+	"password": "$2a$10$Cc5NBQylWAy9LAgzeNaMauVu7BsxSR5PPmamH04LF8l/pYQvSyFGK",
+	"info":
+	{
+		
+		"first_name":"Michiko",
+		"last_name":"Inaba",
+		"email":"michiko@gmail.com",
+		"phone":"503-777-5555",
+		"address":[{
+		          "street1": "28",
+		          "street2": "Egemae",
+		          "city": "Maruyama Okazaki",
+		          "state": "Aichi",
+		          "zip": "444-0006"
+		         }]
+	}	         
+	
+	}
+*/
+	app.put('/api/users/:_id', function (req, res){
+
+		 return users.findById(req.params._id, function (err, user) {
+		    
+			 //assing each data value
+			 user.info.first_name = req.body.info.first_name;
+		     user.info.last_name = req.body.info.last_name;
+		     user.info.email = req.body.info.email;
+		     user.info.phone = req.body.info.phone;
+		     
+		     
+		     //address is an array, so push the values into the array.
+		    user.info.address.push({"street1": req.body.info.address[0].street1, "street2":req.body.info.address[0].street2,
+		    			  "city": req.body.info.address[0].city, "state": req.body.info.address[0].state,
+		    			  "zip": req.body.info.address[0].zip
+		    });
+		     
+		    return user.save(function (err) {
+		      if (err) {
+		      
+		        console.log('Error '+err);
+		      }
+		      return res.send( user);
+		    });
+		  });
+
+		});
+	
+	
 };//module.exports = function(app, passport) {
 
 // route middleware to make sure a user is logged in
