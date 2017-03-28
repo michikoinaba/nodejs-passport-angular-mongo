@@ -4,7 +4,7 @@
  * Angular Application
  ******************************************************************************/
 var app = angular.module('app',
-		[ 'ToolService','ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap' ]).config(
+		[ 'ToolService','UserService','ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap' ]).config(
 		function($routeProvider, $locationProvider, $httpProvider) {
 
 			// ================================================
@@ -87,6 +87,8 @@ var app = angular.module('app',
 	            loggedin: checkLoggedin
 	          }
 	      })
+		   
+	        
 		}) // end of config()
 		.run(function($rootScope, $http) {
 			$rootScope.message = '';

@@ -16,6 +16,7 @@ app.controller('loginCtrl', function($scope, $rootScope, $http, $location) {
 	    	
 	    	//console.log(JSON.stringify(user));
 	    	$rootScope.username=user.username;
+	    	$rootScope.userid = user._id;
 	    	$location.url('/home');
 	    
 	    })

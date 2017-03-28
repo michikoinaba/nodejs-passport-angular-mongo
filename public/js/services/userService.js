@@ -4,8 +4,14 @@ var UserService = angular.module('UserService', []).factory('users', ['$http', f
        
 	
 		//this data is formData in read.html
-		update: function(id){
+		updateAddress: function(id){
 			return $http.put('/api/users/'+id);
+			
+		},
+		
+		//get users addresses
+		getUser: function(id){
+			return $http.get('/api/users/'+id);
 			
 		},
 		// these will work when more API routes are defined on the Node side of things

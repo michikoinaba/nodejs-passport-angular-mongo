@@ -13,6 +13,7 @@ app.controller('SignupCtrl', function($scope, $rootScope, $http, $location) {
     })
     .success(function(user){
     	
+      $rootScope.userid = user._id;
       $location.url('/home');
     })
     .error(function(err){

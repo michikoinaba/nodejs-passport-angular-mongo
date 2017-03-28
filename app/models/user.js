@@ -1,13 +1,14 @@
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
+var tools = require('./tools');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
 
 	username: {type: String },
 	password: {type: String},
-	info:{ 
+	
 		 
 		first_name:{type: String},
 		last_name:{type: String},
@@ -19,15 +20,15 @@ var userSchema = mongoose.Schema({
 		          street2: {type: String},
 		          city: {type: String},
 		          state: {type: String},
-		          zip: {type: String}
+		          zip: {type: String},
+		          tool_id : {type : mongoose.Schema.Types.ObjectId,
+		        	         ref: 'tools'}//rented tool id with this address
 		         
 		} ]
+		
+	  
 	
-	
-	}
 });
-
-
 
 // generating a hash
 userSchema.methods.generateHash = function(password) {
