@@ -4,8 +4,13 @@ var UserService = angular.module('UserService', []).factory('users', ['$http', f
        
 	
 		//this data is formData in read.html
-		updateAddress: function(id){
-			return $http.put('/api/users/'+id);
+		updateAddress: function(id, address_data){
+			return $http.put('/api/users/'+id,address_data);
+			
+		},
+		
+		deleteAddress: function(id, address_id){
+			return $http.delete('/api/users/'+id+'/'+address_id);
 			
 		},
 		
@@ -19,11 +24,18 @@ var UserService = angular.module('UserService', []).factory('users', ['$http', f
         create : function(data) {
             return $http.post('/api/tools', data);
         },
-
-        // call to DELETE a nerd
-     //   delete : function(id) {
-     //       return $http.delete('/api/tools/' + id);
-      //  }
+        
+        updatePayment : function(id, payment_data){
+        	return $http.put('/api/payments/'+id,payment_data);
+        	
+        },
+        
+        updateRentedtools : function(id, rental_data){
+        	return $http.put('/api/rentedtools/'+id,rental_data);
+        	
+        }
+      
+        
     }       
 
 }]);

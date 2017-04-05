@@ -99,12 +99,26 @@ module.exports = function(app, passport) {
 		
 	});
 	
+	app.get('/api/tools/:_id', function(req, res) {
+		
+		   return tools.findById(req.params._id, function (err, data) {
+
+		        // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+		        if (err) {
+		            res.send(err);
+		        }
+
+		        res.json(data); // return all todos in JSON format
+		    });
+		
+	});
+	
 	//Customer Info Page/////
 	//Body->raw->json(application/json)
   //postman test json
 	/*
-	{ "username": "test",
-	"password": "$2a$08$BWyruVmSYrg8GXkGglk/GevwfxncDCvsbFpk1r4inaY1OmeNYxeSu",
+	{ "username": "abc",
+	"password": "$2a$08$aA99hDg46GyQCTysT1ViUO7JLhAUytGaOPYw9Nf99LIYShmO8PN7u",
 	
 		
 		"first_name":"Michiko",
@@ -123,25 +137,26 @@ module.exports = function(app, passport) {
 	
 	}
 */
-	//update user's addresses and info
+	//update user's addresses 
 	app.put('/api/users/:_id', function (req, res){
 
 		 return users.findById(req.params._id, function (err, user) {
-		    
-			 //console.log('req.params.id '+req.body.info.first_name);
+		   
+			//console.log(JSON.stringify(req.body.first_name));
 			 //assing each data value
 			 user.first_name = req.body.first_name;
 		     user.last_name = req.body.last_name;
 		     user.email = req.body.email;
 		     user.phone = req.body.phone;
-		    
+		     user.rentedtools= req.body.tool_id;
 		     
 		     //address is an array, so push the values into the array.
-		    user.address.push({"street1": req.body.address[0].street1, "street2":req.body.address[0].street2,
-		    			  "city": req.body.address[0].city, "state": req.body.address[0].state,
-		    			  "zip": req.body.address[0].zip, "tool_id": req.body.address[0].tool_id
+		    user.address.push({"street1": req.body.street1, "street2":req.body.street2,
+		    			  "city": req.body.city, "state": req.body.state,
+		    			  "zip": req.body.zip, "tool_id": req.body.tool_id
 		    });
 		     
+		   
 		    return user.save(function (err) {
 		      if (err) {
 		      
@@ -173,9 +188,10 @@ module.exports = function(app, passport) {
 			//sample site
 			//http://stackoverflow.com/questions/39424531/mongoose-mongodb-remove-an-element-on-an-array
 			
+			//find a user by user_id and pull (remove) the selected address_id from the selected user.
 		    users.findByIdAndUpdate(req.params._id, {
 		        $pull: {address: {
-		            _id: req.params.address_id   //_eventId is string representation of event ID
+		            _id: req.params.address_id  
 		        }}
 		    }, function(err, data){
 	    		 if (err) {
@@ -190,7 +206,59 @@ module.exports = function(app, passport) {
 			
 		});
 		
+		//add a payment info into the users collection
+		//add user's payment _id is userid
+		app.put('/api/payments/:_id', function (req, res){
+
+			 return users.findById(req.params._id, function (err, user) {
+			   
+				 console.log('payments');
+				console.log(JSON.stringify(req.params._id));
+			
+			     //payments is an array, so push the values into the array.
+			    user.payments.push({"type": req.body.type, "name":req.body.name,
+			    			  "number": req.body.number, "securityCode": req.body.securityCode,
+			    			  "month": req.body.month, "year": req.body.year
+			    });
+			     
+			   
+			    return user.save(function (err) {
+			      if (err) {
+			      
+			        console.log('Error '+err);
+			      }
+			      return res.send( user);
+			    });
+			  });
+
+			});
+		
 	
+		//add a rented tool info into the users collection
+		//add payment_id, address_id, tool_id
+		app.put('/api/rentedtools/:_id', function (req, res){
+
+			 return users.findById(req.params._id, function (err, user) {
+	
+				//console.log(JSON.stringify(req.params._id));
+			
+			     //payments is an array, so push the values into the array.
+			    user.rentedtools.push({"tool_id": req.body.tool_id, "address_id":req.body.address_id,
+			    			  "payment_id": req.body.payment_id
+			    });
+			     
+			   
+			    return user.save(function (err) {
+			      if (err) {
+			      
+			        console.log('Error '+err);
+			      }
+			      return res.send( user);
+			    });
+			  });
+
+			});
+		
 };//module.exports = function(app, passport) {
 
 // route middleware to make sure a user is logged in

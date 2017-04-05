@@ -10,12 +10,12 @@ var userSchema = mongoose.Schema({
 	password: {type: String},
 	
 		 
-		first_name:{type: String},
-		last_name:{type: String},
-		email:{type: String},
-		phone:{type: String},
+	first_name:{type: String},
+	last_name:{type: String},
+	email:{type: String},
+	phone:{type: String},
 	
-		address:[{ 
+	address:[{ 
 		          street1: {type: String},
 		          street2: {type: String},
 		          city: {type: String},
@@ -24,9 +24,26 @@ var userSchema = mongoose.Schema({
 		          tool_id : {type : mongoose.Schema.Types.ObjectId,
 		        	         ref: 'tools'}//rented tool id with this address
 		         
-		} ]
+		} ],
 		
-	  
+	payments:[{
+			  type: {type: String},
+	          name: {type: String},
+	          number: {type: String},
+	          securityCode: {type: String},
+	          month: {type: String},
+	          year: {type: String}
+	         
+		}],
+	
+	
+	rentedtools:[{ 
+					tool_id : {type : mongoose.Schema.Types.ObjectId, ref: 'tools'},
+					address_id:{type : mongoose.Schema.Types.ObjectId},
+					payment_id:{type : mongoose.Schema.Types.ObjectId}
+		}]
+		
+	
 	
 });
 
