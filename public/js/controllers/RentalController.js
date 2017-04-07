@@ -6,7 +6,7 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
                function($scope, $rootScope,$http,$route,$location,$locale,$uibModal,$timeout,tools ,users) {
 
 	// This object will be filled by the form
-	  $scope.tool = {};
+	  $scope.tool = '';
 	  $rootScope.selected_id='';
 	  $scope.showTools=true;
 	  $scope.showAddressList=false;
@@ -18,6 +18,14 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 	  $rootScope.tool_id='';
 	  $rootScope.selected_payment_id='';
 	  
+	  //credit card form variables
+	  $scope.ccinfo = {};
+	  $scope.currentYear = new Date().getFullYear();
+	  $scope.currentMonth = new Date().getMonth() + 1;
+	  $scope.months = $locale.DATETIME_FORMATS.MONTH;
+	  $scope.ccinfo = {type:undefined};
+    		
+	  console.log('rental userid '+$rootScope.userid);
 	  tools.get() // tools is the table name. populate all tools from the tools collection			
 		.success(function(data) {	
 			// console.log(JSON.stringify(data));
@@ -98,15 +106,15 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 		
 		 // open the modal form to confirm selected address deletion///////////////////////////////
 	    $scope.modalConfirm = function (address_id ) {
-	    	$scope.showModal=true;
+	    	$scope.showAddressModal=true;
 	    	
-	    	$rootScope.adddress_id = address_id;
-	    	//console.log('address id '+address_id);
+	    	$rootScope.address_id = address_id;
+	    	//console.log(' modalconfirm address id '+address_id);
 	    	 var modalInstance = $uibModal.open({
 	             // size: size,
 	              animation: false,
 	              backdrop: 'static',
-	              templateUrl : 'templates/modal.html',
+	              templateUrl : 'templates/addressmodal.html',
 	              controller: 'AddressModalController',
 	          
 	          });
@@ -116,14 +124,14 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 	    	  // show a new list of contact
 	         modalInstance.result.then(function (response) {
 	        	 // console.log('modalInstance '+response);
-	        	 $rootScope.showModal=false;
+	        	 $rootScope.showAddressModal=false;
 	        	 
 	        	// get this logged in user's info and get address info from the
 	 			// users collection
 	 			users.getUser($rootScope.userid)
 	 			.success(function(data) {	
 	 					
-	 				console.log(JSON.stringify(data.address));
+	 				//console.log(JSON.stringify(data.address));
 	 			
 	 				// there are existing addresses, so show the address list.
 	 				$scope.showTools=false;
@@ -142,7 +150,7 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 	              console.log('Modal dismissed at: ' + new Date());
 	          });
 	    	
-	    };// $scope.modalConfirm = function (payment_id ) {
+	    };// $scope.modalConfirm = function ( ) {
 	    
 	    //Add new address button is clicked to add a new address
 	    $scope.addNewAddress = function(){
@@ -179,13 +187,7 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 			    	  
 			    	    
 			    	//console.log('payments '+$scope.payments);
-			    	$scope.ccinfo = {};
-			    		
-			    	$scope.currentYear = new Date().getFullYear();
-			    	$scope.currentMonth = new Date().getMonth() + 1;
-			    	$scope.months = $locale.DATETIME_FORMATS.MONTH;
-			    	$scope.ccinfo = {type:undefined};
-			    		
+			    
 			    		//show all payments info here.
 			    		//getAllpayments();
 					
@@ -194,7 +196,7 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 			    			
 			    		//pass validations, insert the new payment data into the payments table.
 			    	    if ($scope.paymentForm.$valid){
-			    	        console.log(ccinfo) // valid data saving stuff here
+			    	        //console.log(ccinfo) // valid data saving stuff here
 			    	        $scope.ccinfo = ccinfo;
 			    	        $scope.ccinfo.user_id = $rootScope.userid;
 			    	        
@@ -244,9 +246,56 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 
 	    }// $scope.selectAddress(address_id){
 	    
+		 // open the modal form to confirm selected payment deletion///////////////////////////////
+	    $scope.modalConfirmpayment = function (payment_id ) {
+	    	$scope.showModal=true;
+	    	
+	    	$rootScope.payment_id = payment_id;
+	    	//console.log('address id '+address_id);
+	    	 var modalInstance = $uibModal.open({
+	             // size: size,
+	              animation: false,
+	              backdrop: 'static',
+	              templateUrl : 'templates/modal.html',
+	              controller: 'PaymentModalController',
+	          
+	          });
+	    	 
+	    	  // this function gets excuted after Yes button is clicked and
+				// delete the selected contact id.
+	    	  // show a new list of contact
+	         modalInstance.result.then(function (response) {
+	        	 // console.log('modalInstance '+response);
+	        	 $rootScope.showModal=false;
+	        	 
+	        	// get this logged in user's info and get payments info from the
+	 			// users collection
+	 			users.getUser($rootScope.userid)
+	 			.success(function(data) {	
+	 					
+	 				//console.log(JSON.stringify(data.payments));
+	 			
+	 				// there are existing addresses, so show the address list.
+	 				$scope.showTools=false;
+	 				$scope.showAddressList=false;
+	 				$scope.showPaymentsRecords=true;
+				
+	 				// assign the address array
+	 				$scope.items = data.payments;
+	 				
+	 				
+	 			});
+		  		  
+	          }, function () {
+	        	  // if a user cancel to remove the selected contact, log it.
+	              console.log('Modal dismissed at: ' + new Date());
+	          });
+	    	
+	    };// $scope.modalConfirm = function ( ) {
+	    
 	    //select a payment method
 	   $scope.selectPayment = function(payment_id){
-		   console.log('payment id '+payment_id);
+		  // console.log('payment id '+payment_id);
 		   $rootScope.selected_payment_id = payment_id;
 		   
 		   if(($rootScope.selected_address_id !='')&&($rootScope.tool_id !='')){
@@ -268,38 +317,32 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 					tools.getone($rootScope.tool_id)
 					.success(function(selected_tool){
 					
-						//console.log('selected_tool.type '+selected_tool.type);
-						//console.log(JSON.stringify(selected_tool));
 						$scope.tool = selected_tool;
 						
+						//calculate the return date
+						var today = new Date();
+						var dd = today.getDate()+7;
 						
+						var mm = today.getMonth()+1; //January is 0!
+						var yyyy = today.getFullYear();
+						
+						$scope.returnDate = yyyy+'/'+mm+'/'+dd;
 					})
 					.error(function(){
 						console.log('err: cannot populate the tool with id '+$rootScope.tool_id);
 					});
 					
-					
-					users.getUser($rootScope.userid)
-					.success(function(data) {	
+					users.getUserInfo($rootScope.userid,$rootScope.selected_address_id, $rootScope.selected_payment_id )
+					.success(function(userinfo){
 						
-						$scope.address = data.address;
-						$scope.payment = data.payment;
+						$scope.address = userinfo.address;
+						$scope.payment = userinfo.payments;
 						
-						var obj = Object.assign($scope.address, $scope.payment);
-						//$scope.items =obj;
-						
-						console.log(JSON.stringify(obj));
-					
-					})
-					.error(function(){
-						console.log('err: cannot populate the user with user id '+$rootScope.userid);
+		 				//console.log(JSON.stringify(userinfo.payments));
 					});
 					
-					var obj = Object.assign($scope.address, $scope.payment);
-					$scope.items =obj;
-					
-					console.log(JSON.stringify(obj));
-				});
+				});//.success(function(data) {	
+			   
 		   }//  if(($rootScope.selected_address_id !='')&&($rootScope.tool_id !='')){
 		   
 	   }//$scope.selectPayment = function(){

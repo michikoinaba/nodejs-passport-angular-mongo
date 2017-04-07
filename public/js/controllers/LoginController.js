@@ -7,7 +7,7 @@ app.controller('loginCtrl', function($scope, $rootScope, $http, $location) {
 
 	  // Register the login() function
 	  $scope.login = function(){
-		  console.log('username '+$scope.user.username);
+		 // console.log('username '+$scope.user.username);
 	    $http.post('/login', {
 	      username: $scope.user.username,
 	      password: $scope.user.password,

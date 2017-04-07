@@ -18,13 +18,15 @@ var app = angular.module('app',
 				// Make an AJAX call to check if the user is logged in
 				$http.get('/loggedin').success(function(user) {
 
-					// console.log('user '+user.username);
+				
 					// Authenticated
 					if (user !== '0') {
 						/* $timeout(deferred.resolve, 0); */
 						deferred.resolve();
 						$rootScope.username = user.username;
-						$rootScope.user_id = user.id;
+						$rootScope.userid = user._id;
+						
+						// console.log('user '+$rootScope.userid);
 						// Not Authenticated
 					} else {
 						// $rootScope.message = 'You need to log in.';
@@ -73,7 +75,8 @@ var app = angular.module('app',
 				}
 			}).when('/login', {
 				templateUrl : 'views/login.html',
-				controller : 'loginCtrl'
+				controller : 'loginCtrl',
+				loggedin : checkLoggedin
 			})
 
 			.when('/signup', {

@@ -108,7 +108,7 @@ module.exports = function(app, passport) {
 		            res.send(err);
 		        }
 
-		        res.json(data); // return all todos in JSON format
+		        res.json(data); // return tool in JSON format
 		    });
 		
 	});
@@ -183,6 +183,62 @@ module.exports = function(app, passport) {
 
 		});
 		
+		
+		//get a selected user's selected address and selected payment method
+		app.get('/api/users/:_id/:address_id/:payment_id', function (req, res){
+			
+			users.findById(req.params._id, {
+				address: {$elemMatch: {_id: req.params.address_id}},payments:{$elemMatch: {_id: req.params.payment_id}}
+			},function(err,data){
+				
+				if(err){
+					
+					res.send(err);
+				}else{
+					
+					res.json(data);
+				}
+			});
+			
+		});
+		
+		
+		//get a selected users selected payment info
+		app.get('/api/payments/:_id/:payment_id', function(req,res){
+			
+			users.findById(req.params._id, {
+				payments:{$elemMatch: {_id: req.params.payment_id}}
+			},function(err,data){
+				
+				if(err){
+					
+					res.send(err);
+				}else{
+					
+					res.json(data);
+				}
+			});
+			
+		});
+		
+		//get a selected users selected payment info
+		app.get('/api/users/:_id/:address_id', function(req,res){
+			
+			users.findById(req.params._id, {
+				address:{$elemMatch: {_id: req.params.address_id}}
+			},function(err,data){
+				
+				if(err){
+					
+					res.send(err);
+				}else{
+					
+					res.json(data);
+				}
+			});
+			
+		});
+		
 	   //remove a selected address from a selected user
 		app.delete('/api/users/:_id/:address_id', function(req, res){
 			//sample site
@@ -205,6 +261,32 @@ module.exports = function(app, passport) {
 	    	});
 			
 		});
+		
+		
+		
+		   //remove a selected payment from a selected user
+			app.delete('/api/payments/:_id/:payment_id', function(req, res){
+				//sample site
+				//http://stackoverflow.com/questions/39424531/mongoose-mongodb-remove-an-element-on-an-array
+				
+				//find a user by user_id and pull (remove) the selected address_id from the selected user.
+			    users.findByIdAndUpdate(req.params._id, {
+			        $pull: {payments: {
+			            _id: req.params.payment_id  
+			        }}
+			    }, function(err, data){
+		    		 if (err) {
+				            res.send(err);
+				        }
+		    		 else{
+		    			 
+		    			 res.json(data);
+		    		 }
+				        
+		    	});
+				
+			});
+			
 		
 		//add a payment info into the users collection
 		//add user's payment _id is userid
