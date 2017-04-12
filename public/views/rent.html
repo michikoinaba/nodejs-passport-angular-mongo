@@ -38,7 +38,7 @@
 		<div>{{errormsg}}</div>
 		<div
 			class="main-low-margin col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 margin-top-100 ">
-			<h3>RENTAL FORM</h3>
+			<h3>ADDRESS FORM</h3>
 			<br>
 			<form name="addForm" ng-submit="formSubmit(addForm.$valid)"
 				novalidate>
@@ -181,7 +181,8 @@
 					<!-- Submit Button -->
 					<button type="submit" ng-disabled="addForm.$invalid"
 						class="btn btn-primary">Submit</button>
-					<button type="button" class="btn btn-danger" ng-click="cancel()">Cancel</button>
+					<button type="button" class="btn btn-danger"
+						ng-click="AddressFormcancel()">Cancel</button>
 				</div>
 
 			</form>
@@ -537,9 +538,14 @@
 					</tr>
 				</table>
 			</div>
-			<button ng-click="paymentForm.submitAttempt=true;save(ccinfo)"
-				type="submit">Submit</button>
+			<!--  <button ng-click="paymentForm.submitAttempt=true;save(ccinfo)"
+				type="submit">Submit</button>-->
 
+			<button type="submit"
+				ng-click="paymentForm.submitAttempt=true;paymentSave(ccinfo)"
+				class="btn btn-primary">Submit</button>
+			<button type="button" class="btn btn-danger"
+				ng-click="PaymentFormcancel()">Cancel</button>
 		</form>
 	</div>
 
@@ -567,18 +573,15 @@
 
 								<div class="tr">
 									<div class="td">
-										{{tool.type}}<br>
-										<br>{{tool.name}}<br>
-										<br>${{tool.price}} per week<br>
-										<br>Return: {{returnDate}}
+										{{tool.type}}<br> <br>{{tool.name}}<br> <br>${{tool.price}}
+										per week<br> <br>Return: {{returnDate}}
 									</div>
 									<div ng-repeat="item in address" class="td">
 										Address:<br>{{item.street1}} {{item.street2}}<br>{{item.city}}<br>{{item.state}}<br>{{item.zip}}
 									</div>
 									<div ng-repeat="pitem in payment" class="td">
-										Card Type: {{pitem.type}}<br>
-										<br>Name: {{pitem.name}}<br>
-										<br>Number: {{pitem.number}}<br>
+										Card Type: {{pitem.type}}<br> <br>Name:
+										{{pitem.name}}<br> <br>Number: {{pitem.number}}<br>
 										<br>Exp: {{pitem.month}}/{{pitem.year}}
 									</div>
 								</div>
@@ -606,6 +609,24 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Rental confirmation Page -->
+	<div ng-show="showConfirmation" class="row">
+		<div class="col-lg-10">
+			<!--  Paragraphs-->
+			<div class="panel panel-default">
+				<div class="panel-heading">Confirmation</div>
+				<div class="panel-body">
+					<p class="lead">Your reservation has been confirmed. Thank you.
+					</p>
+					 <p><a href="#/home">Back to home</a></p>
+				</div>
+			</div>
+			<!-- End Paragraphs-->
+		</div>
+	</div>
+
+
 </div>
 
 

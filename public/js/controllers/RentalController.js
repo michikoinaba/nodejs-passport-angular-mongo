@@ -81,13 +81,27 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 				
 				 $scope.formData.tool_id= $rootScope.tool_id;
 				
-				 //console.log(JSON.stringify( $scope.formData));
+				
 			  users.updateAddress($rootScope.userid, $scope.formData)
 			  .success(function(data) {	
-						
+				 
+				 // console.log(JSON.stringify(data));
 				//successfully delete the row in the database. 
 				$rootScope.successTextAlert = "New Address Added";
 				$rootScope.showSuccessAlert = true;
+				
+				$scope.showAddressList=true;
+				$scope.showAddressForm=false;
+				
+				 //populate this users data and how the adress list
+				users.getUser($rootScope.userid)
+					.success(function(data) {	
+						// assign the address array
+						$scope.items = data.address;
+						$scope.first_name = data.first_name;
+						$scope.last_name = data.last_name;
+					});	
+				 
 											
 				$timeout(function(){
 					$rootScope.showSuccessAlert = false;
@@ -99,11 +113,31 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 					$scope.ModalErrormsg = "Error occured. Could not add a new address.";
 					$scope.showModalErrormsg=true;
 				});
-				
+			 
 			 }//  if (isValid) {
 			
 		 }// $scope.formSubmit = function(){
 		
+		 //cancel the address form.
+		 $scope.AddressFormcancel = function(){
+			 
+			 //hide the address form and show the address list
+			 $scope.showAddressList=true;
+			 $scope.showAddressForm=false;
+			 
+			 //populate this users data and how the adress list
+			users.getUser($rootScope.userid)
+				.success(function(data) {	
+					// assign the address array
+					$scope.items = data.address;
+					$scope.first_name = data.first_name;
+					$scope.last_name = data.last_name;
+				});	
+			 
+		
+			 
+		 }// $scope.AddressFormcancel = function(){
+		 
 		 // open the modal form to confirm selected address deletion///////////////////////////////
 	    $scope.modalConfirm = function (address_id ) {
 	    	$scope.showAddressModal=true;
@@ -185,66 +219,110 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 			    	$rootScope.successTextAlert = "";
 			    	$rootScope.showSuccessAlert = false;
 			    	  
-			    	    
-			    	//console.log('payments '+$scope.payments);
 			    
-			    		//show all payments info here.
-			    		//getAllpayments();
-					
-			    	//submit button is clicked 
-			    	 $scope.save = function(ccinfo){
-			    			
-			    		//pass validations, insert the new payment data into the payments table.
-			    	    if ($scope.paymentForm.$valid){
-			    	        //console.log(ccinfo) // valid data saving stuff here
-			    	        $scope.ccinfo = ccinfo;
-			    	        $scope.ccinfo.user_id = $rootScope.userid;
-			    	        
-			    	    	// get this logged in user's info and update the payment info in the
-				 			// users collection
-				 			users.updatePayment($rootScope.userid, ccinfo)
-				 			.success(function(data) {	
-				 					
-				 				users.getUser($rootScope.userid)
-				 				.success(function(payments) {	
-				 						
-				 						
-				 					// there are existing addresses, so show the address list.
-				 					$scope.showPaymentForm=false;
-				 					$scope.showPaymentsRecords=true;
-				 						
-				 					// assign the address array
-				 					$scope.items = data.payments;
-				 			
-				 				});
-				 			
-				 				
-				 			});
-			    	
-			    	      }  //if ($scope.paymentForm.$valid){
-			    	  
-			    		}//$scope.save = function(data){
-			    	
-			    	
-			    	
 				}else{
 					
-					// there are existing addresses, so show the address list.
+					// there are existing payments, so show the address list.
 					$scope.showPaymentsRecords=true;
 					$scope.showTools=false;
 					$scope.showAddressList=false;
 					
-					// assign the address array
+					// assign the payments array
 					$scope.items = data.payments;
 					
 					
 				}// else
-					
-				
-				
+		
 			});
 
 	    }// $scope.selectAddress(address_id){
+	    
+	    
+	    //add a new payment method
+	    $scope.addNewPayment = function(){
+	    	
+	    	$scope.showPaymentForm=true;
+	    	$scope.showPaymentsRecords=false;
+	    	
+	    }//  $scope.addNewPayment = function(){
+	    
+	 	//Payment form submit button is clicked 
+   	 	$scope.paymentSave = function(ccinfo){
+   			
+   		//pass validations, insert the new payment data into the payments table.
+   	    if ($scope.paymentForm.$valid){
+   	        //console.log(ccinfo) // valid data saving stuff here
+   	        $scope.ccinfo = ccinfo;
+   	        $scope.ccinfo.user_id = $rootScope.userid;
+   	        
+   	    	// get this logged in user's info and update the payment info in the
+	 			// users collection
+	 			users.updatePayment($rootScope.userid, ccinfo)
+	 			.success(function(data) {	
+	 					
+	 				users.getUser($rootScope.userid)
+	 				.success(function(payments) {	
+	 						
+	 						
+	 					// there are existing addresses, so show the address list.
+	 					$scope.showPaymentForm=false;
+	 					$scope.showPaymentsRecords=true;
+	 						
+	 					// assign the address array
+	 					$scope.items = data.payments;
+	 			
+	 				});
+	 			
+	 				
+	 			});
+   	
+   	      }  //if ($scope.paymentForm.$valid){
+   	  
+   		}//	$scope.paymentSave = function(ccinfo){
+			
+   	 	//the user confirm the rental info.  now isert the info into rentedtools array in the users collection
+   	 	$scope.rentalConfirm=function(){
+   	 	  
+   	 		var rentedtools_data = {"payment_id":  $rootScope.selected_payment_id, "tool_id":$rootScope.tool_id, "address_id":$rootScope.selected_address_id  };
+		   //update the rented tools info into the users collection
+		    users.updateRentedtools($rootScope.userid,rentedtools_data)
+			.success(function(data) {	
+				
+				$scope.showConfirmation=true;
+				$scope.showSummary=false;
+			});
+   	 		
+   	 	}//$scope.rentalConfirm=function(){
+   	 	
+   	 	//cancel the tool rental summary
+   	 	$scope.rentalCancel=function(){
+   	 		
+   	 		$scope.showSummary=false;
+   	 		
+	   	 	users.getUser($rootScope.userid)
+			.success(function(data) {	
+					
+				// there are existing payments, so show the address list.
+				$scope.showPaymentsRecords=true;
+				$scope.showTools=false;
+				$scope.showAddressList=false;
+					
+				// assign the payments array
+				$scope.items = data.payments;
+					
+			});
+   	 		
+   	 		
+   	 	
+   	 	}//$scope.rentalCancel=function(){
+   	 	
+	    //cancel the payment form
+	    $scope.PaymentFormcancel=function(){
+	    	
+	    	$scope.showPaymentForm=false;
+	    	$scope.showPaymentsRecords=true;
+	    	
+	    }//  $scope.PaymentFormcancel=function(){
 	    
 		 // open the modal form to confirm selected payment deletion///////////////////////////////
 	    $scope.modalConfirmpayment = function (payment_id ) {
@@ -308,10 +386,10 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 			   $scope.payment='';
 			   $scope.items={};
 			   
-			   var rentedtools_data = {"payment_id":payment_id, "tool_id":$rootScope.tool_id, "address_id":$rootScope.selected_address_id  };
+			   //var rentedtools_data = {"payment_id":payment_id, "tool_id":$rootScope.tool_id, "address_id":$rootScope.selected_address_id  };
 			   //update the rented tools info into the users collection
-			   users.updateRentedtools($rootScope.userid,rentedtools_data)
-				.success(function(data) {	
+			  // users.updateRentedtools($rootScope.userid,rentedtools_data)
+				//.success(function(data) {	
 						
 					
 					tools.getone($rootScope.tool_id)
@@ -341,7 +419,7 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 		 				//console.log(JSON.stringify(userinfo.payments));
 					});
 					
-				});//.success(function(data) {	
+				//});//.success(function(data) {	
 			   
 		   }//  if(($rootScope.selected_address_id !='')&&($rootScope.tool_id !='')){
 		   

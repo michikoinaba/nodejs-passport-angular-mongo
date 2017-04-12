@@ -148,7 +148,7 @@ module.exports = function(app, passport) {
 		     user.last_name = req.body.last_name;
 		     user.email = req.body.email;
 		     user.phone = req.body.phone;
-		     user.rentedtools= req.body.tool_id;
+		   
 		     
 		     //address is an array, so push the values into the array.
 		    user.address.push({"street1": req.body.street1, "street2":req.body.street2,
