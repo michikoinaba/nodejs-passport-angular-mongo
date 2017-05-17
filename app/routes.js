@@ -407,6 +407,21 @@ module.exports = function(app, passport) {
 			
 		});
 		
+		//getPayment in userService.js
+		app.get('/api/payments/:_id' , function(req,res){
+			
+			users.findById(req.params._id, function (err, user) {
+				
+				   // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			     if (err) {
+			            res.send(err);
+			        }
+			
+			     res.json(user.payments);
+			     
+			});
+		});
+		
 };//module.exports = function(app, passport) {
 
 // route middleware to make sure a user is logged in

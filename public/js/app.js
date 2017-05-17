@@ -97,6 +97,13 @@ var app = angular.module('app',
 	            loggedin: checkLoggedin
 	          }
 	      })
+	       .when('/payment', {
+	        templateUrl: 'views/payment.html',
+	        controller: 'PaymentCtrl',
+	        resolve: {////check the user's login status
+	            loggedin: checkLoggedin
+	          }
+	      })
 	        
 		}) // end of config()
 		.run(function($rootScope, $http) {

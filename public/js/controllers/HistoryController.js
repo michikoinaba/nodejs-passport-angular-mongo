@@ -22,4 +22,10 @@ app.controller('HistoryCtrl',['$scope','$rootScope','$http','$route','$location'
 		console.log('Cannot find tools.');
 	});
 	
+if($scope.tools ==''){
+		
+		$scope.message = 'You have no rented tools'
+		
+	}
+	
 }]);

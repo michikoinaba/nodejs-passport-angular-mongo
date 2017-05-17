@@ -27,6 +27,7 @@
 	<script type="text/javascript" src="js/controllers/SignupController.js"></script>
 	<script type="text/javascript" src="js/controllers/RentalController.js"></script>
 	<script type="text/javascript" src="js/controllers/HistoryController.js"></script>
+	<script type="text/javascript" src="js/controllers/PaymentController.js"></script>
 	<script type="text/javascript" src="js/controllers/HomeController.js"></script>
 	<script type="text/javascript" src="js/controllers/AddressModalController.js"></script>
 	<script type="text/javascript" src="js/controllers/PaymentModalController.js"></script>
@@ -49,7 +50,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a  ng-show="username==null" href="#/login">LOGIN</a></li> <!--show LOGIN link only if a user is not logged in.  -->
-                    <li><a href="#/signup">SIGNUP</a></li>
+                    <li><a ng-show="username==null" href="#/signup">SIGNUP</a></li>
                     <li><a href="#/home">HOME</a></li>
                     <li><a href="#about-section">ABOUT</a></li>
                     <li><a href="#contact-section">CONTACT</a></li>

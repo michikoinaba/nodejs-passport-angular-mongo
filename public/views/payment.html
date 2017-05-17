@@ -1,0 +1,42 @@
+
+<div ng-controller="PaymentCtrl">
+
+
+	<div class="row">
+		<div class="col-md-5 col-md-offset-1">
+			<h3>PAYMENTS</h3>
+			<p>{{message}}</p>
+		</div>
+	</div>
+
+
+	<div  class="col-md-5 col-md-offset-1" style="margin-top: 30px">
+
+
+		<div class="row">
+			<div ng-repeat="item in payments">
+				
+					<table class="table table-bordered">
+						
+						<tr>
+							<td style="width: 15%; background-color: #f5f5f5;">Name</td>
+							<td>{{item.name}}</td>
+						</tr>
+						
+						<tr>
+							<td class="" style="width: 15%; background-color: #f5f5f5;">Type</td>
+							<td>{{item.type}}</td>
+						</tr>
+						<tr>
+							<td class="" style="width: 15%; background-color: #f5f5f5;">Card Number</td>
+							<td>{{item.number}}</td>
+						</tr>
+						<tr>
+							<td class="" style="width: 15%; background-color: #f5f5f5;">Exp</td><td>{{item.month}}/{{item.year}}</td>
+						</tr>
+
+					</table>
+			</div>
+		</div>
+	</div>
+</div>

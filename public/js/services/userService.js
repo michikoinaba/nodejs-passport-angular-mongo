@@ -59,12 +59,17 @@ var UserService = angular.module('UserService', []).factory('users', ['$http', f
         	
         },
         
-        getRentedTools : function(id){
+        //get all rentedtool data for a selected user_id
+        getRentedTools : function(id){ //user_id
         	return $http.get('/api/rentedtools/'+id);
         	
-        }
+        },
       
-        
+        //get all payments for a selected user_id
+        getPayment : function(id){ //user_id
+        	return $http.get('/api/payments/'+id);
+        	
+        }
     }       
 
 }]);
