@@ -283,11 +283,13 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
    	 	//the user confirm the rental info.  now isert the info into rentedtools array in the users collection
    	 	$scope.rentalConfirm=function(){
    	 	  
-   	 		var rentedtools_data = {"payment_id":  $rootScope.selected_payment_id, "tool_id":$rootScope.tool_id, "address_id":$rootScope.selected_address_id  };
+   	 		var rentedtools_data = {"payment_id":  $rootScope.selected_payment_id, "tool_id":$rootScope.tool_id, "address_id":$rootScope.selected_address_id,
+   	 				"rented_date" : new Date()};
 		   //update the rented tools info into the users collection
 		    users.updateRentedtools($rootScope.userid,rentedtools_data)
 			.success(function(data) {	
 				
+				console.log(JSON.stringify(rentedtools_data));
 				$scope.showConfirmation=true;
 				$scope.showSummary=false;
 			});
@@ -385,42 +387,35 @@ app.controller('RentCtrl',['$scope','$rootScope','$http','$route','$location','$
 			   $scope.address='';
 			   $scope.payment='';
 			   $scope.items={};
-			   
-			   //var rentedtools_data = {"payment_id":payment_id, "tool_id":$rootScope.tool_id, "address_id":$rootScope.selected_address_id  };
-			   //update the rented tools info into the users collection
-			  // users.updateRentedtools($rootScope.userid,rentedtools_data)
-				//.success(function(data) {	
-						
+		
 					
-					tools.getone($rootScope.tool_id)
-					.success(function(selected_tool){
+				tools.getone($rootScope.tool_id)
+				.success(function(selected_tool){
 					
-						$scope.tool = selected_tool;
+					$scope.tool = selected_tool;
 						
-						//calculate the return date
-						var today = new Date();
-						var dd = today.getDate()+7;
+					//calculate the return date
+					var today = new Date();
+					var dd = today.getDate()+7;
 						
-						var mm = today.getMonth()+1; //January is 0!
-						var yyyy = today.getFullYear();
+					var mm = today.getMonth()+1; //January is 0!
+					var yyyy = today.getFullYear();
 						
-						$scope.returnDate = yyyy+'/'+mm+'/'+dd;
-					})
-					.error(function(){
-						console.log('err: cannot populate the tool with id '+$rootScope.tool_id);
-					});
+					$scope.returnDate = yyyy+'/'+mm+'/'+dd;
+				})
+				.error(function(){
+					console.log('err: cannot populate the tool with id '+$rootScope.tool_id);
+				});
 					
-					users.getUserInfo($rootScope.userid,$rootScope.selected_address_id, $rootScope.selected_payment_id )
-					.success(function(userinfo){
+				users.getUserInfo($rootScope.userid,$rootScope.selected_address_id, $rootScope.selected_payment_id )
+				.success(function(userinfo){
 						
-						$scope.address = userinfo.address;
-						$scope.payment = userinfo.payments;
+					$scope.address = userinfo.address;
+					$scope.payment = userinfo.payments;
 						
 		 				//console.log(JSON.stringify(userinfo.payments));
-					});
+				});
 					
-				//});//.success(function(data) {	
-			   
 		   }//  if(($rootScope.selected_address_id !='')&&($rootScope.tool_id !='')){
 		   
 	   }//$scope.selectPayment = function(){

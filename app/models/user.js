@@ -40,7 +40,8 @@ var userSchema = mongoose.Schema({
 	rentedtools:[{ 
 					tool_id : {type : mongoose.Schema.Types.ObjectId, ref: 'tools'},
 					address_id:{type : mongoose.Schema.Types.ObjectId},
-					payment_id:{type : mongoose.Schema.Types.ObjectId}
+					payment_id:{type : mongoose.Schema.Types.ObjectId},
+					rented_date:{type: Date}
 		}]
 		
 	

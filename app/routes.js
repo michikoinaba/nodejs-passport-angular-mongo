@@ -294,8 +294,8 @@ module.exports = function(app, passport) {
 
 			 return users.findById(req.params._id, function (err, user) {
 			   
-				 console.log('payments');
-				console.log(JSON.stringify(req.params._id));
+				// console.log('payments');
+				//console.log(JSON.stringify(req.params._id));
 			
 			     //payments is an array, so push the values into the array.
 			    user.payments.push({"type": req.body.type, "name":req.body.name,
@@ -326,7 +326,7 @@ module.exports = function(app, passport) {
 			
 			     //payments is an array, so push the values into the array.
 			    user.rentedtools.push({"tool_id": req.body.tool_id, "address_id":req.body.address_id,
-			    			  "payment_id": req.body.payment_id
+			    			  "payment_id": req.body.payment_id, "rented_date":req.body.rented_date
 			    });
 			     
 			   
@@ -340,6 +340,72 @@ module.exports = function(app, passport) {
 			  });
 
 			});
+		
+		
+		//in userService.js
+		//getRentedTools
+		//populate rented tools from the rentedtools in the users collection
+		app.get('/api/rentedtools/:_id' , function(req,res){
+			 var tool_ids = []; 
+			 var rented_dates=[];
+			 var tool_info=[];
+			 var element={};
+			 users.findById(req.params._id, function (err, user) {
+				
+				   // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			     if (err) {
+			            res.send(err);
+			        }
+			       // res.json(user.rentedtools); 
+			        
+			     //loop thru the rentedtools to get the selected tool_id's data from tool collection
+			        for(var key1 in user.rentedtools){
+				        for(var key2 in user.rentedtools[key1]){
+				        	
+				        	if(key2 == 'tool_id'){
+				        		//console.log('key2 '+key2 + ' '+user.rentedtools[key1][key2]);
+				        		tool_ids.push(user.rentedtools[key1][key2]);
+				        		
+				        	}//if(key2 == 'tool_id'){
+				        	
+				        	//add all rented_date into rented_dates array
+				        	if(key2 == 'rented_date'){
+				        		
+				        		rented_dates.push(user.rentedtools[key1][key2]);
+				        	}
+				        	
+				        }//for
+			 		}//for
+			        
+			        //console.log(rented_dates);
+			        //find all tool data from the tools collection with selected tool ids
+			        tools.find({
+			        	"_id": {$in:tool_ids}
+			        }, function(err, tool_data){
+			        	  
+			        	if (err) {
+					       res.send(err);
+					    }
+			        	
+			        	//add the rented_date and the tool data in one obj
+			        	for(var key in tool_data){
+			        		
+			        		element[key]={tool:tool_data[key]};
+			        		element[key].rented_date = rented_dates[key];
+			        		
+			        		tool_info.push(element[key]);
+			        		//console.log('key '+key + ' '+element[key].rented_date);
+			        	}
+			        	//console.log(tool_info[0].rented_date);
+			        	res.json(tool_info);
+			        	
+			        	
+			        });
+			     
+			  });	
+			 
+			
+		});
 		
 };//module.exports = function(app, passport) {
 

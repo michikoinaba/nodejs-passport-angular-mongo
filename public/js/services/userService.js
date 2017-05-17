@@ -45,7 +45,6 @@ var UserService = angular.module('UserService', []).factory('users', ['$http', f
 		
 
 		// these will work when more API routes are defined on the Node side of things
-        // call to POST and create a new nerd
         create : function(data) {
             return $http.post('/api/tools', data);
         },
@@ -57,6 +56,11 @@ var UserService = angular.module('UserService', []).factory('users', ['$http', f
         
         updateRentedtools : function(id, rental_data){
         	return $http.put('/api/rentedtools/'+id,rental_data);
+        	
+        },
+        
+        getRentedTools : function(id){
+        	return $http.get('/api/rentedtools/'+id);
         	
         }
       

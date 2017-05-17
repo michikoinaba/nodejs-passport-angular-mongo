@@ -90,7 +90,13 @@ var app = angular.module('app',
 	            loggedin: checkLoggedin
 	          }
 	      })
-		   
+		   .when('/history', {
+	        templateUrl: 'views/rentalhistory.html',
+	        controller: 'HistoryCtrl',
+	        resolve: {////check the user's login status
+	            loggedin: checkLoggedin
+	          }
+	      })
 	        
 		}) // end of config()
 		.run(function($rootScope, $http) {
